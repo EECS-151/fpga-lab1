@@ -1,4 +1,4 @@
-module z1top(
+module zu3top(
   input [3:0] BUTTONS,
   input [7:0] SWITCHES,
   output [7:0] LEDS

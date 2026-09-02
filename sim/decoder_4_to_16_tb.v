@@ -14,13 +14,9 @@ module decoder_4_to_16_tb();
 
     integer i;
 
-    initial begin
-        `ifdef IVERILOG
-            $dumpfile("decoder_4_to_16_tb.fst");
-            $dumpvars(0, decoder_4_to_16_tb);
-        `endif
+    initial begin 
         `ifndef IVERILOG
-            $vcdpluson;
+           $fsdbon; 
         `endif
 
         for (i = 0; i < 10; i = i + 1) begin
@@ -32,7 +28,7 @@ module decoder_4_to_16_tb();
         $display("All tests passed!");
 
         `ifndef IVERILOG
-            $vcdplusoff;
+            $fsdbon;
         `endif
         $finish();
     end
