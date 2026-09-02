@@ -14,26 +14,20 @@ module decoder_4_to_16_tb();
 
     integer i;
 
-    initial begin
-        `ifdef IVERILOG
-            $dumpfile("decoder_4_to_16_tb.fst");
-            $dumpvars(0, decoder_4_to_16_tb);
-        `endif
-        `ifndef IVERILOG
-            $vcdpluson;
-        `endif
-
+    initial begin 
+        string fsdb_file;
+        if (!$value$plusargs("fsdbfile+%s", fsdb_file)) begin
+            fsdb_file = "default.fsdb"; 
+        end
+        $fsdbDumpfile(fsdb_file);
+        
         for (i = 0; i < 10; i = i + 1) begin
             addr = $urandom % 16;
             #(1);
             assert(one_hot == 16'b1 << addr) else $fatal("Expected one_hot to be %b, but got %b for addr=%b", 16'b1 << addr, one_hot, addr);
         end
 
-        $display("All tests passed!");
-
-        `ifndef IVERILOG
-            $vcdplusoff;
-        `endif
+        $display("All tests passed!");;
         $finish();
     end
 endmodule
