@@ -1,7 +1,7 @@
 SHELL                   := $(shell which bash) -o pipefail
 ABS_TOP                 := $(subst /cygdrive/c/,C:/, $(shell pwd))
 SCRIPTS                 := $(ABS_TOP)/scripts
-VIVADO                  ?= /share/instsww/xilinx/2025.2/Vivado/bin/vivado
+VIVADO                  ?= vivado # this should be sourced by default 
 VIVADO_OPTS             ?= -nolog -nojournal -mode batch
 FPGA_PART               ?= xczu3eg-sfvc784-2-e
 RTL                     += $(subst /cygdrive/c/,C:/, $(shell find $(ABS_TOP)/src -type f \( -name "*.v" -o -name "*.sv" \)))
