@@ -1,6 +1,6 @@
 SHELL                   := $(shell which bash) -o pipefail
 ABS_TOP                 := $(subst /cygdrive/c/,C:/, $(shell pwd))
-SCRIPTS                 := $(ABS_TOP)/../scripts
+SCRIPTS                 := $(ABS_TOP)/scripts
 VIVADO                  ?= /share/instsww/xilinx/2025.2/Vivado/bin/vivado
 VIVADO_OPTS             ?= -nolog -nojournal -mode batch
 FPGA_PART               ?= xczu3eg-sfvc784-2-e
