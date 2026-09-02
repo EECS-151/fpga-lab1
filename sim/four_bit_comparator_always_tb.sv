@@ -18,13 +18,11 @@ module four_bit_comparator_always_tb();
     integer i;
 
     initial begin
-        `ifdef IVERILOG
-            $dumpfile("four_bit_comparator_always_tb.fst");
-            $dumpvars(0, four_bit_comparator_always_tb);
-        `endif
-        `ifndef IVERILOG
-            $vcdpluson;
-        `endif
+        string fsdb_file;
+        if (!$value$plusargs("fsdbfile+%s", fsdb_file)) begin
+            fsdb_file = "default.fsdb"; 
+        end
+        $fsdbDumpfile(fsdb_file);
 
         for(i = 0; i < 16; i = i + 1) begin
             a = $urandom() % 16;
@@ -46,10 +44,6 @@ module four_bit_comparator_always_tb();
         end
 
         $display("All tests passed!");
-
-        `ifndef IVERILOG
-            $vcdplusoff;
-        `endif
         $finish();
     end
 endmodule

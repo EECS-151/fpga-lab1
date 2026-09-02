@@ -7,27 +7,18 @@ FPGA_PART               ?= xczu3eg-sfvc784-2-e
 RTL                     += $(subst /cygdrive/c/,C:/, $(shell find $(ABS_TOP)/src -type f \( -name "*.v" -o -name "*.sv" \)))
 CONSTRAINTS             += $(subst /cygdrive/c/,C:/, $(shell find $(ABS_TOP)/src -type f -name "*.xdc"))
 TOP                     ?= zu3top
-VCS                     := /home/ff/eecs151/hammer-tools/synopsys/vcs/P-2019.06/bin/vcs -full64
-VCS_OPTS                := -notice -line +lint=all,noVCDE,noNS,noSVA-UA -sverilog -kdb -timescale=1ns/10ps -debug
+VCS                     := $(VCS_HOME)/bin/vcs -full64
+VCS_OPTS     := -notice -line +lint=all,noVCDE,noNS,noSVA-UA -sverilog -kdb -timescale=1ns/10ps -debug_access+all
 SIM_RTL                 := $(subst /cygdrive/c/,C:/, $(shell find $(ABS_TOP)/sim -type f \( -name "*.v" -o -name "*.sv" \)))
 VVP                     := vvp
-VPD2FSDB                ?= $(VERDI_HOME)/bin/vpd2fsdb
 VERDI                   ?= $(VERDI_HOME)/bin/verdi
 
 sim/%.tb: sim/%.sv $(RTL)
 	cd sim && $(VCS) $(VCS_OPTS) -o $*.tb $(RTL) $*.sv -top $*
 
-sim/%.vpd: sim/%.tb
-	cd sim && ./$*.tb +verbose=1 +vpdfile+$*.vpd
-
-sim/%.fsdb: sim/%.vpd
-	cd sim && $(VPD2FSDB) $*.vpd -o $*.fsdb
-
-sim/%.tbi: sim/%.sv $(RTL)
-	cd sim && $(IVERILOG) $(IVERILOG_OPTS) -o $*.tbi $*.v $(RTL)
-
-sim/%.fst: sim/%.tbi
-	cd sim && $(VVP) $*.tbi -fst
+sim/%.fsdb: sim/%.tb
+	cd sim && ./$*.tb +verbose=1 +fsdbfile+$*.fsdb
+	
 
 # Open Verdi with FSDB and VCS dbdir. Usage: make verdi [TB=led_controller_tb]
 verdi: sim/$(TB).fsdb

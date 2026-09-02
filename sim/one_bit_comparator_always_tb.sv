@@ -3,11 +3,11 @@
 `define SECOND 1000000000
 `define MS 1000000
 
-module one_bit_comparator_behavioral_tb();
+module one_bit_comparator_always_tb();
     reg a, b;
     wire greater, less, equal;
 
-    one_bit_comparator_behavioral DUT (
+    one_bit_comparator_always DUT (
         .a(a),
         .b(b),
         .greater(greater),
@@ -16,13 +16,11 @@ module one_bit_comparator_behavioral_tb();
     );
 
     initial begin
-        `ifdef IVERILOG
-            $dumpfile("one_bit_comparator_behavioral_tb.fst");
-            $dumpvars(0, one_bit_comparator_behavioral_tb);
-        `endif
-        `ifndef IVERILOG
-            $vcdpluson;
-        `endif
+        string fsdb_file;
+        if (!$value$plusargs("fsdbfile+%s", fsdb_file)) begin
+            fsdb_file = "default.fsdb"; 
+        end
+        $fsdbDumpfile(fsdb_file);
 
         a = 1'b0;
         b = 1'b0;
@@ -53,10 +51,6 @@ module one_bit_comparator_behavioral_tb();
         assert(equal == 1'b1) else $fatal("Expected equal to be 1, but got %b for a=%b, b=%b", equal, a, b);
 
         $display("All tests passed!");
-
-        `ifndef IVERILOG
-            $vcdplusoff;
-        `endif
         $finish();
     end
 endmodule

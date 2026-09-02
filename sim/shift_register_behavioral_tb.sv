@@ -20,15 +20,13 @@ module shift_register_behavioral_tb();
     always @(posedge clk) prev_out <= out;
 
     integer i;
-
+    
     initial begin
-        `ifdef IVERILOG
-            $dumpfile("shift_register_behavioral_tb.fst");
-            $dumpvars(0, shift_register_behavioral_tb);
-        `endif
-        `ifndef IVERILOG
-            $vcdpluson;
-        `endif
+        string fsdb_file;
+        if (!$value$plusargs("fsdbfile+%s", fsdb_file)) begin
+            fsdb_file = "default.fsdb"; 
+        end
+        $fsdbDumpfile(fsdb_file);
 
         in = 1'b0;
         #(32)
@@ -41,10 +39,6 @@ module shift_register_behavioral_tb();
         end
 
         $display("All tests passed!");
-
-        `ifndef IVERILOG
-            $vcdplusoff;
-        `endif
         $finish();
     end
 endmodule
