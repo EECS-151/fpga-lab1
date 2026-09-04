@@ -14,7 +14,9 @@ VVP                     := vvp
 VERDI                   ?= $(VERDI_HOME)/bin/verdi
 
 sim/%.tb: sim/%.sv $(RTL)
-	cd sim && $(VCS) $(VCS_OPTS) -o $*.tb $(RTL) $*.sv -top $*
+	cd sim && $(VCS) $(VCS_OPTS) -o $*.tb \
+	    -y $(ABS_TOP)/src +libext+.sv+.v \
+	    $*.sv -top $*
 
 sim/%.fsdb: sim/%.tb
 	cd sim && ./$*.tb +verbose=1 +fsdbfile+$*.fsdb
